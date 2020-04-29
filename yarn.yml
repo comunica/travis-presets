@@ -4,5 +4,7 @@ script:
   - yarn run build
   - yarn run lint
   - yarn run test-ci
+after_success:
+  - yarn run coveralls-ci
 cache:
   yarn: true
