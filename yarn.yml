@@ -1,0 +1,8 @@
+import: rubensworks/travis-presets:node-base.yml@master
+install: yarn install --pure-lockfile
+script:
+  - yarn run build
+  - yarn run lint
+  - yarn run test-ci
+cache:
+  yarn: true

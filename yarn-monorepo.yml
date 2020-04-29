@@ -1,0 +1,47 @@
+import: rubensworks/travis-presets:node-base.yml@master
+sudo: required
+services:
+ - docker
+install: yarn install --pure-lockfile
+script:
+  - yarn run build
+  - yarn run lint
+  - yarn run test-ci
+  - lerna run browser
+  - lerna run spec
+  - if [ "$NODE_MAIN" = "true" ]; then ( sh -c "`curl -fsSl https://raw.githubusercontent.com/comunica/comunica-lerna-docker/master/install.sh`" && ~/.comunica-lerna-docker/bin/comunica-lerna-docker build ) fi
+after_success:
+  - yarn run coveralls-ci
+  - if [ "$NODE_MAIN" = "true" ]; then ( yarn global add typedoc && yarn run doc ) fi
+cache:
+  yarn: true
+  directories:
+      - .rdf-test-suite-cache
+      - .rdf-test-suite-ldf-cache
+deploy:
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GH_TOKEN
+    keep-history: true
+    local-dir: documentation
+    on:
+      tags: false
+      branch: master
+      condition: $NODE_MAIN = true
+      os: "linux"
+  - provider: script
+    skip-cleanup: true
+    script: ~/.comunica-lerna-docker/bin/comunica-lerna-docker push
+    on:
+      tags: false
+      branch: master
+      condition: $NODE_MAIN = true
+      os: "linux"
+  - provider: script
+    skip-cleanup: true
+    script: ~/.comunica-lerna-docker/bin/comunica-lerna-docker push
+    on:
+      tags: true
+      all_branches: true
+      condition: $NODE_MAIN = true
+      os: "linux"
