@@ -12,7 +12,7 @@ script:
   - if [ "$NODE_MAIN" = "true" ]; then ( sh -c "`curl -fsSl https://raw.githubusercontent.com/rubensworks/lerna-docker/master/install.sh`" && ~/.lerna-docker/bin/lerna-docker comunica build ) fi
 after_success:
   - yarn run coveralls-ci
-  - if [ "$NODE_MAIN" = "true" ]; then ( yarn global add typedoc && yarn run doc ) fi
+  - if [ "$NODE_MAIN" = "true" ]; then ( yarn run doc ) fi
 cache:
   yarn: true
   directories:
