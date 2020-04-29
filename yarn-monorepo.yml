@@ -7,8 +7,8 @@ script:
   - yarn run build
   - yarn run lint
   - yarn run test-ci
-  - lerna run browser
-  - lerna run spec
+  - lerna run browser --concurrency 1
+  - lerna run spec --concurrency 1
   - if [ "$NODE_MAIN" = "true" ]; then ( sh -c "`curl -fsSl https://raw.githubusercontent.com/comunica/comunica-lerna-docker/master/install.sh`" && ~/.comunica-lerna-docker/bin/comunica-lerna-docker build ) fi
 after_success:
   - yarn run coveralls-ci
